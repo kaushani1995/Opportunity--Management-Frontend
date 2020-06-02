@@ -1,0 +1,9 @@
+.myDiv{
+    display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.myButton{
+    align-self: center;
+}
