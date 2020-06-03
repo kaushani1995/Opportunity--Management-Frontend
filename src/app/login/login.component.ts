@@ -19,7 +19,8 @@ export class LoginComponent implements OnInit  {
   googleSignIn(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((userData) =>{
       this.user = userData;
-      console.log(this.user.name);
+      console.log(this.user.authorizationCode);
+      localStorage.setItem("APP_TOKEN", this.user.idToken);
       this.router.navigate(['\home']);
     })
   }

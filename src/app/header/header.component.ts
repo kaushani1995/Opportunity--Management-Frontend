@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {LogoutService} from '../logout.service';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private logoutService : LogoutService) { }
 
   ngOnInit(): void {
+  }
+
+  logOut(): void {
+    this.logoutService.logout();
+  }
+
+  checkLogin(): boolean {
+    if (localStorage.getItem("APP_TOKEN")) {
+      return true;
+    }
+    return false;
   }
 
 }

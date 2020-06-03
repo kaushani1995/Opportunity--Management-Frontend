@@ -1,4 +1,8 @@
 
 <mat-toolbar color = "primary">
     <span>AU OPPORTUNITY MANAGEMENT SYSTEM</span>
+    <span class="example-spacer"></span>
+    <div *ngIf="checkLogin()">
+        <button mat-raised-button class = "myButton" (click)= "logOut()" >Logout</button>
+    </div>
 </mat-toolbar>
