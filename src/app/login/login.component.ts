@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit  {
       this.user = userData;
       console.log(this.user.authorizationCode);
       localStorage.setItem("APP_TOKEN", this.user.idToken);
+      localStorage.setItem("EMAIL", this.user.email);
       this.router.navigate(['\home']);
     })
   }
