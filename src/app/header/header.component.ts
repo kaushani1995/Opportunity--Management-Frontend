@@ -8,7 +8,9 @@ import {LogoutService} from '../logout.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private logoutService : LogoutService) { }
+  constructor(private logoutService : LogoutService) { 
+    
+  }
 
   ngOnInit(): void {
   }

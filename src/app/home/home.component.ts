@@ -1,5 +1,6 @@
-import { Component, OnInit, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { ServerApisService } from '../server-apis.service';
+import {MatSort} from '@angular/material/sort';
 import { Opportunity, Team, User, Status, Location, Position} from '../models'
 import {MatTableDataSource} from '@angular/material/table';
 
@@ -10,7 +11,6 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
   teams : Team[];
   users : User[];
   thisUser : User;
@@ -18,7 +18,9 @@ export class HomeComponent implements OnInit {
   locations : Location[];
   positions : Position[];
   dataSource: MatTableDataSource<Opportunity>;
-  displayedColumns: string[] = ['idOpportunity', 'createdBy', 'createdTS', "updatedTS","idTeam", "idStatus", "idLocation", "jobDesc", "idPosition", "hiringManager","skills","edit","delete"];
+  displayedColumns: string[] = ['idOpportunity', 'createdBy', 'createdTS', "updatedBy", "updatedTS","idTeam", "idStatus", "idLocation", "jobDesc", "idPosition", "hiringManager","skills","edit","delete"];
+
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(private serverApis: ServerApisService) { 
     this.serverApis.getUser(localStorage.getItem("EMAIL")).subscribe(usr => this.thisUser = usr);

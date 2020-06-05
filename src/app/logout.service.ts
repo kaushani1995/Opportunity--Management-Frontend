@@ -10,6 +10,7 @@ export class LogoutService {
 
   logout(): void {
     localStorage.removeItem("APP_TOKEN");
+    localStorage.removeItem("EMAIL");
     this.router.navigate(['\login']);
   }
 }
