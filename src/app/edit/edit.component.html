@@ -1,0 +1,100 @@
+<div class="center">
+    <div class="formContainer">
+        <p class= "titleText">Update Opportunity</p>
+        <form (submit)="onSubmit()" [formGroup]="opportunityForm">
+
+            <div>
+                <mat-form-field >
+                    <mat-label>Position</mat-label>
+                    <mat-select [(value)]="selectedPosition" #profileField formControlName="position" disabled>
+                        <mat-option *ngFor="let food of positions | keyvalue" [value]="food.key">
+                            {{food.value}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="profileField"> You Must Select a Position</mat-error>
+                </mat-form-field>
+            </div>
+
+
+            <mat-form-field>
+                <mat-label>Team</mat-label>
+                <mat-select required [(value)]="selectedTeam" formControlName="team" disabled>
+                    <mat-option *ngFor="let food of teams | keyvalue" [value]="food.key">
+                        {{food.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> You Must Select a Team</mat-error>
+            </mat-form-field>
+
+
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Status</mat-label>
+                <mat-select required [(value)]="selectedStatus" formControlName="status">
+                    <mat-option *ngFor="let food of statuses | keyvalue" [value]="food.key">
+                        {{food.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> You Must Select the Status</mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Location</mat-label>
+                <mat-select required [(value)]="selectedLocation" formControlName="location">
+                    <mat-option *ngFor="let food of locations | keyvalue" [value]="food.key">
+                        {{food.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> Please Select a Job Location </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+                <mat-label>Hiring Manager</mat-label>
+                <mat-select required [(value)]="selectedHiringManager" formControlName="hiringManager">
+                    <mat-option *ngFor="let food of users | keyvalue" [value]="food.key">
+                        {{food.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> Please Select a Hiring Manager </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field class="example-chip-list">
+                <mat-chip-list #chipList aria-label="Fruit selection" formControlName="skills">
+                    <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable" [removable]="removable"
+                        (removed)="remove(fruit)">
+                        {{fruit}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Type in the Skill" #fruitInput [formControl]="fruitCtrl"
+                        [matAutocomplete]="auto" [matChipInputAddOnBlur]="false" [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                        {{fruit}}
+                    </mat-option>
+                </mat-autocomplete>
+                
+                <mat-error *ngIf = "selectedSkills.length === 0"> There are no Valid Skills Selected </mat-error>
+            </mat-form-field>
+
+            
+
+            <mat-form-field class="example-chip-list">
+                <mat-label>Job Description</mat-label>
+                <textarea name="jobDescription" formControlName="description" cdkTextareaAutosize cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5" matInput placeholder="Describe the Opportunity here"></textarea>
+                    <mat-error *ngIf = "selectedSkills.length === 0"> JobDescription must be atleast 10 characters </mat-error>
+            </mat-form-field>
+
+            <div class="buttonContainer">
+             <div>
+            <button type="submit" mat-raised-button color="primary">Submit</button>
+        </div>   
+        </div>
+        </form>
+
+    </div>
+</div>

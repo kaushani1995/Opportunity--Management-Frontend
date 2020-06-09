@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { ServerApisService } from '../server-apis.service';
 import {MatSort} from '@angular/material/sort';
-import { Opportunity, Team, User, Status, Location, Position} from '../models'
+import { Opportunity, Team, User, Status, Location, Position, OppAndSkills} from '../models'
 import {MatTableDataSource} from '@angular/material/table';
+import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -11,18 +14,30 @@ import {MatTableDataSource} from '@angular/material/table';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  teams : Team[];
-  users : User[];
+  
+  users : Map<string, string>;
+  opportunities : OppAndSkills[]=[];
   thisUser : User;
-  statuses : Status[];
-  locations : Location[];
-  positions : Position[];
-  dataSource: MatTableDataSource<Opportunity>;
+  skillset : Map<number, string>;
+  teams : Map<number, string>;
+  statuses : Map<number, string>;
+  locations : Map<number, string>;
+  positions : Map<number, string>;
+  dataSource: MatTableDataSource<OppAndSkills>;
   displayedColumns: string[] = ['idOpportunity', 'createdBy', 'createdTS', "updatedBy", "updatedTS","idTeam", "idStatus", "idLocation", "jobDesc", "idPosition", "hiringManager","skills","edit","delete"];
+  filterString = '';
+  filterFormControl = new FormControl();
+  oppsData: OppAndSkills[] = [];
+  filteredOppsData: OppAndSkills[] = [];
+
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor(private serverApis: ServerApisService) { 
+  constructor(private serverApis: ServerApisService, private router: Router,
+    private snackBar: MatSnackBar) { 
+  }
+
+  ngOnInit(): void { 
     this.serverApis.getUser(localStorage.getItem("EMAIL")).subscribe(usr => this.thisUser = usr);
 
     this.serverApis.getTeams().subscribe(tms => this.teams = tms);
@@ -34,63 +49,74 @@ export class HomeComponent implements OnInit {
     this.serverApis.getLocation().subscribe(lct => this.locations = lct);
 
     this.serverApis.getPosition().subscribe(pst => this.positions = pst);
+
+    this.serverApis.getSkills().subscribe(skl => this.skillset = skl);
     
     this.serverApis.getOpportunities()
-    .subscribe(opp => this.dataSource = new MatTableDataSource(opp)); 
+    .subscribe(opp => {
+      this.opportunities = opp;
+      this.oppsData = opp;
+      this.dataSource = new MatTableDataSource(opp);
+    }); 
   }
 
-  ngOnInit(): void { 
+
+  skillsToString(opp) {
+    return opp.skillset.map(x => this.skillset[x]).join(', ');
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  openSnackBar(message = 'Deleted') {
+    this.snackBar.open(message, 'Dismiss', {
+      duration: 2000,
+    });
   }
 
-  findTeam(id: number): string{
-    for(let i=0;i<this.teams.length;i++){
-        if(this.teams[i].idTeam==id){
-          return this.teams[i].name;
-        }
-    }
-  }
-
-  findUser(email: string): string{
-    for(let i=0;i<this.users.length;i++){
-        if(this.users[i].email==email){
-          return this.users[i].name;
-        }
-    }
-  }
-
-  findStatus(id: number): string{
-    for(let i=0;i<this.statuses.length;i++){
-        if(this.statuses[i].idStatus==id){
-          return this.statuses[i].currStatus;
-        }
-    }
-  }
-
-  findLocation(id: number): string{
-    for(let i=0;i<this.locations.length;i++){
-        if(this.locations[i].idLocation==id){
-          return this.locations[i].name;
-        }
-    }
-  }
-
-  findPosition(id: number): string{
-    for(let i=0;i<this.positions.length;i++){
-        if(this.positions[i].idPosition==id){
-          return this.positions[i].name;
-        }
-    }
+  deleteOpp(id) {
+    this.serverApis.deleteOpp(id).subscribe(res => console.log(res));
+    this.openSnackBar();
+    window.location.reload(); 
   }
 
   ifAdmin(): boolean{
     if(this.thisUser.role == "Admin"){ 
       return true;}
     return false;
+  }
+
+  editOpp(id) {
+    this.router.navigate(['edit', id]);
+  }
+
+  applyFilter(event) {
+    const filterValue = event.target.value;
+    console.log("apply filter");  
+    this.filterString = filterValue;
+    this.dataSource = new MatTableDataSource(this.oppsData.filter(x => this.testJob(x)));
+  }
+
+  testJob(opp: OppAndSkills) {
+
+    console.log(this.getJobString(opp));
+
+    const regex = new RegExp(this.filterString.toLowerCase());
+    return regex.test(this.getJobString(opp).toLowerCase());
+
+  }
+
+  getJobString(opp: OppAndSkills): string{
+    const location = this.locations[opp.opportunity.idLocation];
+    const position = this.positions[opp.opportunity.idPosition];
+    const hiringManager = this.users[opp.opportunity.hiringManager];
+    const status = this.statuses[opp.opportunity.idStatus];
+    const skills = this.skillsToString(opp);
+    const team = this.teams[opp.opportunity.idTeam];
+    const jobDesc = opp.opportunity.jobDesc;
+
+    let resultString = '';
+    resultString = resultString + location + position + hiringManager + status + skills + team + jobDesc;
+
+    return resultString;
+
   }
 
 }

@@ -1,4 +1,4 @@
-export interface Opportunity{
+export class Opportunity{
     idOpportunity: number;
 	createdBy: string;
 	createdTS: Date;
@@ -12,39 +12,39 @@ export interface Opportunity{
 	idPosition: number;
 }
 
-export interface Skillset{
+export class Skillset{
     idSkillset: number;
     name: string;
 }
 
-export interface Team{
+export class Team{
     idTeam: number;
     name: string;
 }
 
-export interface Location{
+export class Location{
     idLocation: number;
     name: string;
 }
 
-export interface Position{
+export class Position{
     idPosition: number;
     name: string;
 }
 
-export interface Status{
+export class Status{
     idStatus: number;
     currStatus: string;
 }
 
-export interface User{
+export class User{
     email: string;
     name: string;
     role: string;
 }
 
-export interface OppAndSkills{
+export class OppAndSkills{
 
     opportunity : Opportunity;
-    skills : Skillset[]
+    skillset : number[];
 }
