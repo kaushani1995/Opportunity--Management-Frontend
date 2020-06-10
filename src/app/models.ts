@@ -48,3 +48,8 @@ export class OppAndSkills{
     opportunity : Opportunity;
     skillset : number[];
 }
+
+export class Trend{
+    names : string[];
+    counts : number[];
+}

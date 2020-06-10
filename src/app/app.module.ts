@@ -24,6 +24,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider} from "angularx-social-login";
 import { EditComponent } from './edit/edit.component';
+import { AddComponent } from './add/add.component';
+import { TrendsComponent } from './trends/trends.component';
+import { ChartsModule } from 'ng2-charts';
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 const config = new AuthServiceConfig([
@@ -44,9 +48,13 @@ export function provideConfig() {
     HeaderComponent,
     LoginComponent,
     HomeComponent,
-    EditComponent
+    EditComponent,
+    AddComponent,
+    TrendsComponent
   ],
   imports: [
+    MatTabsModule,
+    ChartsModule,
     FormsModule,
     ReactiveFormsModule,
     MatSnackBarModule,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { OppAndSkills, Opportunity, Team, Location, Status, User, Position, Skillset } from './models';
+import { OppAndSkills, Opportunity, Team, Location, Status, User, Position, Skillset, Trend } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +44,10 @@ export class ServerApisService {
     return this.http.get<any[]>('http://localhost:8080/oppmang//skillsets');
   }
 
+  getSkillsobj(): Observable<Skillset[]>{
+    return this.http.get<Skillset[]>('http://localhost:8080/oppmang//skillsetsobj');
+  }
+
   getTeam(id: number): Observable<any>{
     return this.http.get<Team>('http://localhost:8080/oppmang/teams/'+id);
   }
@@ -63,4 +67,13 @@ export class ServerApisService {
   updateOpp(oppAndSkills: OppAndSkills): Observable<any> {
     return this.http.put('http://localhost:8080/oppmang/opportunities/'+oppAndSkills.opportunity.idOpportunity, oppAndSkills, this.httpOptions);
   }
+
+  addOpp(oppAndSkills: OppAndSkills): Observable<any> {
+    return this.http.post('http://localhost:8080/oppmang/opportunities/', oppAndSkills, this.httpOptions);
+  }
+
+  getTrend(type : string): Observable<Trend> {
+    return this.http.get<Trend>('http://localhost:8080/oppmang/trends/'+type);
+  }
+
 }

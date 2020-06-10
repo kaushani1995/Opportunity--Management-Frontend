@@ -1,12 +1,13 @@
-<div><div class = "buttons">
-  <div *ngIf="ifAdmin()">
-    <button mat-raised-button class = "myButton">Add Post</button>
-</div>
-
 <div>
-  <button mat-raised-button class = "myButton">View Trends</button>
-</div>
-</div>
+  <div class = "buttons">
+    <div *ngIf="ifAdmin()">
+      <button mat-raised-button class = "myButton" (click) = "addOpp()">Add Post</button>
+    </div>
+
+    <div>
+      <button mat-raised-button class = "myButton" (click) = "trends()">View Trends</button>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="ifAdmin()">

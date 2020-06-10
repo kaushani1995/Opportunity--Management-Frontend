@@ -87,6 +87,14 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['edit', id]);
   }
 
+  addOpp(){
+    this.router.navigate(['/add']);
+  }
+
+  trends(){
+    this.router.navigate(['/trends']);
+  }
+
   applyFilter(event) {
     const filterValue = event.target.value;
     console.log("apply filter");  

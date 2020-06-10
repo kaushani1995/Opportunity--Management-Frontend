@@ -9,11 +9,11 @@ import { ServerApisService } from '../server-apis.service';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  selector: 'app-add',
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.css']
 })
-export class EditComponent implements OnInit {
+export class AddComponent implements OnInit {
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl();
@@ -46,19 +46,13 @@ export class EditComponent implements OnInit {
   selectedSkills: number[] = [];
   jobDesc = '';
 
-  oppId = -1;
+  
   oppObject: OppAndSkills;
 
   constructor(
     private serverApis: ServerApisService,
     private router: Router,
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute) {
-
-      this.route.params.subscribe(params => {
-        console.log(params);
-        this.oppId = params.id;
-      });
+    private formBuilder: FormBuilder) {
 
       //this.skillSet.forEach((value: string, key: number) => this.temp.push(value));
   
@@ -135,55 +129,27 @@ export class EditComponent implements OnInit {
 
   onSubmit() {
     const opp = new Opportunity();
-    opp.idOpportunity = this.oppId;
     opp.jobDesc = this.opportunityForm.value.description;
     opp.idTeam = this.opportunityForm.value.team;
     opp.hiringManager = this.opportunityForm.value.hiringManager;
     opp.idLocation = this.opportunityForm.value.location;
     opp.idStatus = this.opportunityForm.value.status;
     opp.idPosition = this.opportunityForm.value.position;
-    opp.updatedBy =  localStorage.getItem("EMAIL");
+    opp.createdBy =  localStorage.getItem("EMAIL");
     const oppSkill = new OppAndSkills();
     oppSkill.opportunity = opp;
     oppSkill.skillset = this.opportunityForm.value.skills;
     console.log("Ready to go: ");
 
-    this.serverApis.updateOpp(oppSkill).subscribe((res: any) => {
+    this.serverApis.addOpp(oppSkill).subscribe((res: any) => {
       console.log(res);
       this.router.navigate(['/home']);
     });
 
   }
 
-  populateOpportunity() {
-    this.serverApis.getOpp(this.oppId).subscribe((res: OppAndSkills) => {
-      console.log(res);
-      console.log("populateopportunity");
-      this.oppObject = res;
-
-      this.opportunityForm.controls['position'].setValue(res.opportunity.idPosition);
-      this.opportunityForm.controls['team'].setValue(res.opportunity.idTeam);
-      this.opportunityForm.controls['hiringManager'].setValue(res.opportunity.hiringManager);
-      this.opportunityForm.controls['location'].setValue(res.opportunity.idLocation);
-      this.opportunityForm.controls['status'].setValue(res.opportunity.idStatus);
-      this.opportunityForm.controls['description'].setValue(res.opportunity.jobDesc);
-      this.opportunityForm.controls['skills'].setValue(res.skillset);
-
-      console.log(res.skillset);
-
-      this.selectedSkills = res.skillset;
-      this.fruits = res.skillset.map(x => this.skillSet.filter(y => y.idSkillset === x )[0].name);
-      //this.fruits = res.skillset.map(x => this.skillSet[x]);
-    });
-  }
-
 
   ngOnInit(): void {
-
-    if (this.oppId === -1) {
-      this.router.navigate(['\home']);
-      return;
-    }
 
     this.serverApis.getTeams().subscribe(tms => this.teams = tms);
 
@@ -202,9 +168,6 @@ export class EditComponent implements OnInit {
       //this.skillSet.forEach((value: string, key: number) => this.skillMap.set(value, key));
     });
 
-    this.populateOpportunity();
-
     
   }
-
 }
