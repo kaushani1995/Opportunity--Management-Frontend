@@ -48,6 +48,7 @@ export class EditComponent implements OnInit {
 
   oppId = -1;
   oppObject: OppAndSkills;
+  flag: boolean = false;
 
   constructor(
     private serverApis: ServerApisService,
@@ -174,6 +175,7 @@ export class EditComponent implements OnInit {
       this.selectedSkills = res.skillset;
       this.fruits = res.skillset.map(x => this.skillSet.filter(y => y.idSkillset === x )[0].name);
       //this.fruits = res.skillset.map(x => this.skillSet[x]);
+      this.flag =true;
     });
   }
 

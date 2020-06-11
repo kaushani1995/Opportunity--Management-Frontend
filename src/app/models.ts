@@ -50,6 +50,6 @@ export class OppAndSkills{
 }
 
 export class Trend{
-    names : string[];
-    counts : number[];
+    name : string[];
+    count : number[];
 }

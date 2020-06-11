@@ -3,7 +3,8 @@ import { ServerApisService } from '../server-apis.service';
 import { Router } from '@angular/router';
 import { Trend } from '../models';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Label, MultiDataSet } from 'ng2-charts';
+import { SingleDataSet, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
 @Component({
   selector: 'app-trends',
@@ -12,52 +13,49 @@ import { Label } from 'ng2-charts';
 })
 export class TrendsComponent implements OnInit {
 
-  constructor(private serverApis: ServerApisService, private router: Router) { }
-
-  skillTrend : Trend;
+  constructor(private serverApis: ServerApisService, private router: Router) {
+    monkeyPatchChartJsTooltip();
+    monkeyPatchChartJsLegend();
+   }
 
   barChartOptions: ChartOptions = {
     responsive: true,
   };
-  barChartLabels: Label[] = ['Apple', 'Banana', 'Kiwifruit', 'Blueberry', 'Orange', 'Grapes'];
+  barChartLabels: Label[];
   barChartType: ChartType = 'bar';
   barChartLegend = true;
   barChartPlugins = [];
+  barChartData: ChartDataSets[];
 
-  barChartData: ChartDataSets[] = [
-    { data: [45, 37, 60, 70, 46, 33], label: 'Skills' }
-  ];
+  doughnutChartLabels: Label[];
+  doughnutChartData: MultiDataSet;
+  doughnutChartType: ChartType = 'doughnut';
+
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public pieChartLabels: Label[];
+  public pieChartData: SingleDataSet;
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
 
   ngOnInit(): void {
 
     this.serverApis.getTrend("location").subscribe((trd: Trend) => {
+      this.doughnutChartLabels = trd.name;
+      this.doughnutChartData = [trd.count];
       console.log(trd);
     });
 
-    this.serverApis.getTrend("skill").subscribe(
-      function (x) {
-        console.log(x);
-        this.skillTrend = x;
-      },
-      function (err) {
-        console.log('Error: %s', err);
-      },
-      function () {
-      this.barChartLabels = this.skillTrend.names;
-      this.barChartData = [{ data: this.skillTrend.counts , label: 'Skills' }]
-      }
-    );
-
-    /*this.serverApis.getTrend("skill").subscribe((trd: Trend) => {
-      this.barChartLabels = ['Apcszple', 'Banacszna', 'Kiwisczfruit', 'Blvcxueberry', 'dOrange', ];
-      this.barChartData = [
-        { data: [5, 7, 6, 7, 6, 3], label: 'Skills' }
-      ];
-      //this.barChartLabels = trd.names;
-      //this.barChartData = [{ data: trd.counts , label: 'Skills' }];
-      console.log(trd.names.length);
-    });*/
+    this.serverApis.getTrend("skill").subscribe((trd: Trend) => {
+      this.barChartLabels = trd.name;
+      this.barChartData = [{ data: trd.count , label: 'Skills' }];
+      console.log(trd.name);
+    });
     this.serverApis.getTrend("team").subscribe((trd: Trend) => {
+      this.pieChartLabels = trd.name;
+      this.pieChartData = trd.count;
       console.log(trd);
     });
 

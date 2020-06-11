@@ -1,4 +1,4 @@
-<div class="center">
+<div *ngIf= "flag" class="center">
     <div class="formContainer">
         <p class= "titleText">Update Opportunity</p>
         <form (submit)="onSubmit()" [formGroup]="opportunityForm">
