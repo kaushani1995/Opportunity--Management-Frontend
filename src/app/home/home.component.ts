@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   locations : Map<number, string>;
   positions : Map<number, string>;
   dataSource: MatTableDataSource<OppAndSkills>;
-  displayedColumns: string[] = ['idOpportunity', 'createdBy', 'createdTS', "updatedBy", "updatedTS","idTeam", "idStatus", "idLocation", "jobDesc", "idPosition", "hiringManager","skills","edit","delete"];
+  displayedColumns: string[] = ['idOpportunity', "idTeam", "idStatus", "idLocation", "jobDesc", "idPosition", "hiringManager","skills", 'createdBy', 'createdTS', "updatedBy", "updatedTS","edit","delete"];
   filterString = '';
   filterFormControl = new FormControl();
   oppsData: OppAndSkills[] = [];
@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
   }
 
   openSnackBar(message = 'Deleted') {
-    this.snackBar.open(message, 'Dismiss', {
+    this.snackBar.open(message, 'Okay', {
       duration: 2000,
     });
   }

@@ -1,22 +1,10 @@
 <div class="center">
     <div class="formContainer">
-        <p class= "titleText">Update Opportunity</p>
+        <h2 class= "titleText">Add Opportunity</h2>
         <form (submit)="onSubmit()" [formGroup]="opportunityForm">
 
             <div>
-                <mat-form-field >
-                    <mat-label>Position</mat-label>
-                    <mat-select [(value)]="selectedPosition" #profileField formControlName="position">
-                        <mat-option *ngFor="let food of positions | keyvalue" [value]="food.key">
-                            {{food.value}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="profileField"> You Must Select a Position</mat-error>
-                </mat-form-field>
-            </div>
-
-
-            <mat-form-field>
+            <mat-form-field class="form-field">
                 <mat-label>Team</mat-label>
                 <mat-select required [(value)]="selectedTeam" formControlName="team">
                     <mat-option *ngFor="let food of teams | keyvalue" [value]="food.key">
@@ -26,9 +14,20 @@
                 <mat-error> You Must Select a Team</mat-error>
             </mat-form-field>
 
+            
+            <mat-form-field class="form-field">
+                <mat-label>Hiring Manager</mat-label>
+                <mat-select required [(value)]="selectedHiringManager" formControlName="hiringManager">
+                    <mat-option *ngFor="let food of users | keyvalue" [value]="food.key">
+                        {{food.value}}
+                    </mat-option>
+                </mat-select>
+                <mat-error> Please Select a Hiring Manager </mat-error>
+            </mat-form-field>
+        </div>
 
-
-            <mat-form-field class="example-full-width">
+        <div>
+            <mat-form-field class="form-field">
                 <mat-label>Status</mat-label>
                 <mat-select required [(value)]="selectedStatus" formControlName="status">
                     <mat-option *ngFor="let food of statuses | keyvalue" [value]="food.key">
@@ -38,7 +37,7 @@
                 <mat-error> You Must Select the Status</mat-error>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field class="form-field">
                 <mat-label>Location</mat-label>
                 <mat-select required [(value)]="selectedLocation" formControlName="location">
                     <mat-option *ngFor="let food of locations | keyvalue" [value]="food.key">
@@ -48,19 +47,18 @@
                 <mat-error> Please Select a Job Location </mat-error>
             </mat-form-field>
 
-
-            <mat-form-field>
-                <mat-label>Hiring Manager</mat-label>
-                <mat-select required [(value)]="selectedHiringManager" formControlName="hiringManager">
-                    <mat-option *ngFor="let food of users | keyvalue" [value]="food.key">
+            <mat-form-field class="form-field">
+                <mat-label>Position</mat-label>
+                <mat-select [(value)]="selectedPosition" #profileField formControlName="position">
+                    <mat-option *ngFor="let food of positions | keyvalue" [value]="food.key">
                         {{food.value}}
                     </mat-option>
                 </mat-select>
-                <mat-error> Please Select a Hiring Manager </mat-error>
+                <mat-error *ngIf="profileField"> You Must Select a Position</mat-error>
             </mat-form-field>
+        </div>
 
-
-            <mat-form-field class="example-chip-list">
+            <mat-form-field class="form-field">
                 <mat-chip-list #chipList aria-label="Fruit selection" formControlName="skills">
                     <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable" [removable]="removable"
                         (removed)="remove(fruit)">
@@ -82,7 +80,7 @@
 
             
 
-            <mat-form-field class="example-chip-list">
+            <mat-form-field class="form-field">
                 <mat-label>Job Description</mat-label>
                 <textarea name="jobDescription" formControlName="description" cdkTextareaAutosize cdkAutosizeMinRows="1"
                     cdkAutosizeMaxRows="5" matInput placeholder="Describe the Opportunity here"></textarea>
@@ -92,6 +90,7 @@
             <div class="buttonContainer">
              <div>
             <button type="submit" mat-raised-button color="primary">Submit</button>
+            <button class = "cancel" mat-raised-button color="primary" (click) = cancel()>Cancel</button>
         </div>   
         </div>
         </form>

@@ -170,4 +170,9 @@ export class AddComponent implements OnInit {
 
     
   }
+
+  cancel(){
+    this.router.navigate(['/home']);
+  }
+
 }

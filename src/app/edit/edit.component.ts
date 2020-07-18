@@ -37,18 +37,22 @@ export class EditComponent implements OnInit {
   skillMap: Map<string, number> = new Map();
 
   name = new FormControl('');
-
-  selectedPosition: any;
-  selectedHiringManager: any;
-  selectedLocation: any;
-  selectedTeam: any;
-  selectedStatus: any;
   selectedSkills: number[] = [];
   jobDesc = '';
 
   oppId = -1;
   oppObject: OppAndSkills;
   flag: boolean = false;
+
+  opportunityForm = new FormGroup({
+    position: new FormControl('', [Validators.required]),
+    team: new FormControl('', [Validators.required]),
+    status: new FormControl('', [Validators.required]),
+    location: new FormControl('',[Validators.required]),
+    hiringManager: new FormControl('', [Validators.required]),
+    skills: new FormControl([], [Validators.required]),
+    description: new FormControl('', [Validators.required, Validators.maxLength(2000), Validators.minLength(10)]),
+  });
 
   constructor(
     private serverApis: ServerApisService,
@@ -68,16 +72,6 @@ export class EditComponent implements OnInit {
         map((fruit: string | null) => fruit ? this._filter(fruit) : this.skillSet.map(x => x.name).slice()));
         //map((fruit: string | null) => fruit ? this._filter(fruit) : this.temp.slice()));
   }
-
-  opportunityForm = new FormGroup({
-    position: new FormControl('', [Validators.required]),
-    team: new FormControl('', [Validators.required]),
-    status: new FormControl('', [Validators.required]),
-    location: new FormControl('', [Validators.required]),
-    hiringManager: new FormControl('', [Validators.required]),
-    skills: new FormControl([], [Validators.required]),
-    description: new FormControl('', [Validators.required, Validators.maxLength(2000), Validators.minLength(10)]),
-  });
 
   add(event): void {
     const input = event.input;
@@ -147,7 +141,7 @@ export class EditComponent implements OnInit {
     const oppSkill = new OppAndSkills();
     oppSkill.opportunity = opp;
     oppSkill.skillset = this.opportunityForm.value.skills;
-    console.log("Ready to go: ");
+    console.log(opp);
 
     this.serverApis.updateOpp(oppSkill).subscribe((res: any) => {
       console.log(res);
@@ -156,10 +150,13 @@ export class EditComponent implements OnInit {
 
   }
 
-  populateOpportunity() {
-    this.serverApis.getOpp(this.oppId).subscribe((res: OppAndSkills) => {
+  setForm() {
+    this.serverApis.getOpp(this.oppId).subscribe(
+      
+      (res: OppAndSkills) => {
+
       console.log(res);
-      console.log("populateopportunity");
+      console.log("setForm");
       this.oppObject = res;
 
       this.opportunityForm.controls['position'].setValue(res.opportunity.idPosition);
@@ -175,7 +172,8 @@ export class EditComponent implements OnInit {
       this.selectedSkills = res.skillset;
       this.fruits = res.skillset.map(x => this.skillSet.filter(y => y.idSkillset === x )[0].name);
       //this.fruits = res.skillset.map(x => this.skillSet[x]);
-      this.flag =true;
+      this.flag = true;
+      
     });
   }
 
@@ -202,11 +200,12 @@ export class EditComponent implements OnInit {
       console.log(this.skillSet);
       this.skillSet.forEach(x => this.skillMap.set(x.name, x.idSkillset));
       //this.skillSet.forEach((value: string, key: number) => this.skillMap.set(value, key));
+      this.setForm(); 
     });
+  }
 
-    this.populateOpportunity();
-
-    
+  cancel(){
+    this.router.navigate(['/home']);
   }
 
 }

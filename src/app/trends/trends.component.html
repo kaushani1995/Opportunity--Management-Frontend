@@ -11,7 +11,7 @@
           </canvas>
         </div>
     </mat-tab>
-    <mat-tab label="Team">
+    <mat-tab label="Location">
       <div *ngIf = "doughnutChartData && doughnutChartLabels" class="chart-wrapper">
         <canvas baseChart 
         [data]="doughnutChartData"
@@ -20,7 +20,7 @@
       </canvas>
     </div>
     </mat-tab>
-    <mat-tab label="Location">
+    <mat-tab label="Team">
       <div *ngIf = "pieChartData && pieChartLabels" class="chart-wrapper">
         <canvas baseChart 
         [data]="pieChartData" 

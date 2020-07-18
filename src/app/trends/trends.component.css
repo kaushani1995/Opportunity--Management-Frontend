@@ -1,4 +1,9 @@
 .chart-wrapper{
     width: 50%;
     height: 50%;
+    margin: 10px;
+}
+
+.myButton{
+    margin: 10px;
 }
